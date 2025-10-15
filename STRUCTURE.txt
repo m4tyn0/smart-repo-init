@@ -1,0 +1,37 @@
+project-init/
+│
+├── 🚀 MAIN SCRIPTS
+│   ├── quick_init_v2.py         ⭐ Fast one-command setup
+│   ├── init_project_v2.py       ⚙️  Full-featured with options
+│   └── install.sh               📦 Global installation script
+│
+├── 📚 DOCUMENTATION
+│   ├── README.md                📖 Complete usage guide
+│   ├── SUMMARY.md               📋 Overview & getting started
+│   ├── QUICKREF.md              ⚡ Quick reference cheat sheet
+│   └── CODERABBIT_WORKFLOW.md   🐰 Detailed workflow explanation
+│
+├── 🎨 TEMPLATES/ (easily customizable!)
+│   ├── gitignore.python         🐍 Python .gitignore (with uv)
+│   ├── gitignore.generic        📄 Generic .gitignore
+│   ├── gitattributes            🔀 Line ending config
+│   ├── coderabbit.yaml          🐰 CodeRabbit config
+│   ├── pre-commit               🪝 Git pre-commit hook
+│   └── README.md                📝 Project README template
+│
+└── 📜 LEGACY (for reference)
+    ├── quick_init.py
+    └── init_project.py
+
+═══════════════════════════════════════════════════════════
+
+QUICK START:
+  ./install.sh                    # Install globally
+  mkdir myproject && cd myproject
+  project-init                    # Initialize!
+
+INSTALL CODERABBIT:
+  curl -fsSL https://cli.coderabbit.ai/install.sh | sh
+  coderabbit configure
+
+═══════════════════════════════════════════════════════════

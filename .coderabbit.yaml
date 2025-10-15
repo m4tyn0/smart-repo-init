@@ -1,0 +1,52 @@
+# CodeRabbit Configuration
+# Documentation: https://docs.coderabbit.ai/guides/review-instructions
+
+# Language for reviews (en, es, fr, de, zh, ja)
+language: en
+
+# Enable early access features
+early_access: true
+
+# Review configuration
+reviews:
+  # Automatically review pull requests
+  auto_review: true
+  
+  # Request changes workflow
+  request_changes_workflow: true
+  
+  # Include high-level summary
+  high_level_summary: true
+  
+  # Include a poem in the review (fun feature!)
+  poem: true
+  
+  # Show review status
+  review_status: true
+  
+  # Collapse the walkthrough section
+  collapse_walkthrough: false
+  
+  # Path-specific instructions
+  path_instructions: []
+  
+  # Custom review instructions
+  # instructions: |
+  #   - Focus on Python best practices
+  #   - Check for security vulnerabilities
+  #   - Verify type hints are used
+  
+# Chat configuration
+chat:
+  # Auto-reply to questions
+  auto_reply: true
+
+# Tools configuration (optional)
+# tools:
+#   # Enable shell script analysis
+#   shellcheck:
+#     enabled: true
+#   
+#   # Enable GitHub Actions validation
+#   actionlint:
+#     enabled: true
