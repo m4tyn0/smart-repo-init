@@ -1,4 +1,4 @@
-project-init/
+smart-repo-init/
 │
 ├── 🚀 SCRIPTS
 │   ├── quick_init_v2.py         ⭐ Fast setup (recommended)

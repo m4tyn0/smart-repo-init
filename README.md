@@ -1,6 +1,6 @@
-# Project Initializer
+# Smart Repo Init
 
-Quick setup for new projects with git best practices and CodeRabbit code reviews.
+Quick setup for new repositories with git best practices and CodeRabbit code reviews.
 
 ## Quick Start
 

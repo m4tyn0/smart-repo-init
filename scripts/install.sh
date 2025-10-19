@@ -1,10 +1,10 @@
 
 #!/bin/bash
-# Installation script for project-init tools
+# Installation script for smart-repo-init tools
 
 set -e
 
-echo "🚀 Installing project-init tools..."
+echo "🚀 Installing smart-repo-init tools..."
 echo ""
 
 # Get the directory where this script is located
@@ -62,7 +62,7 @@ fi
 if [ -n "$SHELL_CONFIG" ]; then
     if ! grep -q 'export PATH="$HOME/bin:$PATH"' "$SHELL_CONFIG"; then
         echo "" >> "$SHELL_CONFIG"
-        echo '# Added by project-init installer' >> "$SHELL_CONFIG"
+        echo '# Added by smart-repo-init installer' >> "$SHELL_CONFIG"
         echo 'export PATH="$HOME/bin:$PATH"' >> "$SHELL_CONFIG"
         echo "✅ Added ~/bin to PATH in $SHELL_CONFIG"
         echo ""
