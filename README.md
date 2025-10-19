@@ -26,7 +26,7 @@ python ./scripts/quick_init_v2.py
 ### `quick_init_v2.py` (Recommended)
 Fast setup with sensible defaults:
 ```bash
-python quick_init_v2.py
+python ./scripts/quick_init_v2.py
 ```
 
 ### `init_project_v2.py` (Advanced)
