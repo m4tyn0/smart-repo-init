@@ -269,6 +269,7 @@ Configuration:
                 print("  git config --global user.email 'you@example.com'")
             else:
                 print("\n📦 Creating initial commit...")
+                print("   (CodeRabbit will review all files in the initial commit)")
                 self.run_command(["git", "add", "."])
                 self.run_command(["git", "commit", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
                 print("✅ Initial commit created")

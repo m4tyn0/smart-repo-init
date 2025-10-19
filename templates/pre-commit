@@ -30,24 +30,70 @@ echo "Reviewing files:"
 echo "$STAGED_FILES" | sed 's/^/  - /'
 echo ""
 
-# Run CodeRabbit review on staged files
-# The --json flag provides structured output
-# You can customize the review behavior here
-echo "$STAGED_FILES" | xargs coderabbit review
-
-REVIEW_EXIT_CODE=$?
-
-if [ $REVIEW_EXIT_CODE -ne 0 ]; then
+# Check if CodeRabbit is authenticated
+if ! coderabbit auth status 2>/dev/null | grep -q "Logged in"; then
+    echo "⚠️  CodeRabbit not authenticated!"
     echo ""
-    echo "❌ CodeRabbit review found issues!"
+    echo "Run: coderabbit auth login"
+    echo "Then try your commit again."
     echo ""
-    echo "Please review the suggestions above and:"
-    echo "  1. Fix the issues and stage your changes again, or"
-    echo "  2. Skip this check with: git commit --no-verify"
+    echo "Skipping CodeRabbit review for now..."
+    exit 0
+fi
+
+# Check if this is the first commit (no commit history)
+if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+    echo "📝 This appears to be the first commit in this repository."
+    echo "   Running CodeRabbit review on all files..."
+    echo ""
+    # For first commit, review all files instead of uncommitted changes
+    if coderabbit review --type all --plain 2>&1; then
+        echo ""
+        echo "✅ CodeRabbit review passed! Proceeding with initial commit..."
+        exit 0
+    else
+        REVIEW_EXIT_CODE=$?
+        echo ""
+        echo "❌ CodeRabbit review failed with exit code: $REVIEW_EXIT_CODE"
+        echo ""
+        echo "This could be due to:"
+        echo "  • CodeRabbit not being properly authenticated"
+        echo "  • Network connectivity issues"
+        echo "  • CodeRabbit service being unavailable"
+        echo ""
+        echo "To troubleshoot:"
+        echo "  1. Run: coderabbit auth login"
+        echo "  2. Test manually: coderabbit review --type all"
+        echo "  3. Check CodeRabbit status: coderabbit auth status"
+        echo ""
+        echo "To skip this check: git commit --no-verify"
+        echo ""
+        exit 1
+    fi
+fi
+
+# Run CodeRabbit review with better error handling
+echo "Starting CodeRabbit review..."
+if coderabbit review --type uncommitted --plain 2>&1; then
+    echo ""
+    echo "✅ CodeRabbit review passed! Proceeding with commit..."
+    exit 0
+else
+    REVIEW_EXIT_CODE=$?
+    echo ""
+    echo "❌ CodeRabbit review failed with exit code: $REVIEW_EXIT_CODE"
+    echo ""
+    echo "This could be due to:"
+    echo "  • CodeRabbit not being properly authenticated"
+    echo "  • Network connectivity issues"
+    echo "  • CodeRabbit service being unavailable"
+    echo ""
+    echo "To troubleshoot:"
+    echo "  1. Run: coderabbit auth login"
+    echo "  2. Test manually: coderabbit review --type uncommitted"
+    echo "  3. Check CodeRabbit status: coderabbit auth status"
+    echo ""
+    echo "To skip this check: git commit --no-verify"
     echo ""
     exit 1
 fi
-
-echo ""
-echo "✅ CodeRabbit review passed! Proceeding with commit..."
-exit 0

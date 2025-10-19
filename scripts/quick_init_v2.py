@@ -133,7 +133,7 @@ if ! command -v coderabbit &> /dev/null; then
     echo "Install: curl -fsSL https://cli.coderabbit.ai/install.sh | sh"
     exit 0
 fi
-git diff --cached --name-only | xargs coderabbit review || exit 1
+coderabbit review || exit 1
 """)
         print("✅ Pre-commit hook created (minimal)")
     
