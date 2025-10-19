@@ -11,7 +11,7 @@ coderabbit auth login
 
 # 2. Initialize a project
 mkdir myproject && cd myproject
-python /path/to/quick_init_v2.py
+python ./scripts/quick_init_v2.py
 ```
 
 ## What It Does
@@ -32,9 +32,16 @@ python quick_init_v2.py
 ### `init_project_v2.py` (Advanced)
 Full-featured with options:
 ```bash
-python init_project_v2.py --path ~/projects/my-app --language python
-python init_project_v2.py --no-readme --templates-dir ~/.config/templates
+python ./scripts/init_project_v2.py --path ~/projects/my-app --language python
+python ./scripts/init_project_v2.py --no-readme --templates-dir ~/.config/templates
 ```
+
+**Available options:**
+- `--path <directory>` - Initialize in specific directory (default: current)
+- `--language <lang>` - Use language-specific .gitignore (default: python)
+- `--no-readme` - Skip README.md creation
+- `--templates-dir <path>` - Use custom templates directory
+- `--no-workflow` - Skip workflow explanation
 
 ## Templates
 
@@ -63,13 +70,19 @@ You code → git add → git commit
 Make scripts globally available:
 
 ```bash
-# Install globally
+# Install globally (adds scripts to ~/bin)
 ./install.sh
-source ~/.zshrc
+source ~/.zshrc  # or ~/.bashrc, ~/.profile
 
 # Now use anywhere
 mkdir myproject && cd myproject && project-init
 ```
+
+**What `./install.sh` does:**
+- Copies scripts to `~/bin/` directory
+- Makes them executable
+- Adds `~/bin` to your PATH (requires shell restart)
+- Enables `project-init` command from anywhere
 
 ## Customization
 
@@ -87,7 +100,7 @@ cp templates/* ~/.config/templates/web/
 echo "node_modules/" >> ~/.config/templates/web/gitignore.generic
 
 # Use them
-python init_project_v2.py --templates-dir ~/.config/templates/web
+python ./scripts/init_project_v2.py --templates-dir ~/.config/templates/web
 ```
 
 ## Troubleshooting
