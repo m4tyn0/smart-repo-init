@@ -18,8 +18,7 @@ test = [
 ]
 
 [project.scripts]
-project-init = "scripts.quick_init_project:main"
-project-init-full = "scripts.full_init_project:main"
+project-init = "scripts.full_init_project:main"
 
 [build-system]
 requires = ["hatchling"]

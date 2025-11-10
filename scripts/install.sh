@@ -30,20 +30,11 @@ fi
 mkdir -p "$HOME/bin"
 echo "✅ Created ~/bin directory"
 
-# Copy scripts from scripts/ directory
-if [ -f "$SCRIPT_DIR/quick_init_project.py" ]; then
-    cp "$SCRIPT_DIR/quick_init_project.py" "$HOME/bin/project-init"
-    chmod +x "$HOME/bin/project-init"
-    echo "✅ Copied quick_init_project.py to ~/bin/project-init"
-else
-    echo "❌ Error: Could not find quick_init_project.py in $SCRIPT_DIR"
-    exit 1
-fi
-
+# Copy script from scripts/ directory
 if [ -f "$SCRIPT_DIR/full_init_project.py" ]; then
-    cp "$SCRIPT_DIR/full_init_project.py" "$HOME/bin/project-init-full"
-    chmod +x "$HOME/bin/project-init-full"
-    echo "✅ Copied full_init_project.py to ~/bin/project-init-full"
+    cp "$SCRIPT_DIR/full_init_project.py" "$HOME/bin/project-init"
+    chmod +x "$HOME/bin/project-init"
+    echo "✅ Copied full_init_project.py to ~/bin/project-init"
 else
     echo "❌ Error: Could not find full_init_project.py in $SCRIPT_DIR"
     exit 1
@@ -77,8 +68,7 @@ echo ""
 echo "🎉 Installation complete!"
 echo ""
 echo "Usage:"
-echo "  project-init           # Quick setup with defaults"
-echo "  project-init-full      # Full setup with options"
+echo "  project-init [options]  # Initialize a new project"
 echo ""
 echo "Next steps:"
 echo "  1. Reload your shell: source $SHELL_CONFIG"

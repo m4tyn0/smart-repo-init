@@ -22,7 +22,7 @@ coderabbit auth login
 
 # 2. Initialize a project
 mkdir myproject && cd myproject
-python ./scripts/quick_init_project.py
+python ./scripts/full_init_project.py
 ```
 
 ## What It Does
@@ -32,18 +32,21 @@ python ./scripts/quick_init_project.py
 - ✅ Sets up pre-commit hook for automatic code reviews
 - ✅ Creates initial commit with all files
 
-## Scripts
+## Usage
 
-### `quick_init_project.py` (Recommended)
-Fast setup with sensible defaults:
-```bash
-python ./scripts/quick_init_project.py
-```
+The script provides flexible options for initializing your project:
 
-### `full_init_project.py` (Advanced)
-Full-featured with options:
 ```bash
-python ./scripts/full_init_project.py --path ~/projects/my-app --language python
+# Basic usage (current directory)
+python ./scripts/full_init_project.py
+
+# Specify a directory
+python ./scripts/full_init_project.py --path ~/projects/my-app
+
+# Use different language .gitignore
+python ./scripts/full_init_project.py --language python
+
+# Custom templates
 python ./scripts/full_init_project.py --no-readme --templates-dir ~/.config/templates
 ```
 
@@ -78,35 +81,36 @@ You code → git add → git commit
 
 ## Installation (Optional)
 
-Make scripts globally available:
+Make the script globally available:
 
 ```bash
-# Install globally (adds scripts to ~/bin)
-./install.sh
+# Install globally (adds script to ~/bin)
+./scripts/install.sh
 source ~/.zshrc  # or ~/.bashrc, ~/.profile
 
 # Now use anywhere
 mkdir myproject && cd myproject && project-init
 ```
 
-**What `./install.sh` does:**
-- Copies scripts to `~/bin/` directory
-- Makes them executable
+**What `./scripts/install.sh` does:**
+- Copies `full_init_project.py` to `~/bin/project-init`
+- Copies templates to `~/bin/templates`
+- Makes the script executable
 - Adds `~/bin` to your PATH (requires shell restart)
 - Enables `project-init` command from anywhere
 
 ### Uninstall
 
-To remove the installed scripts:
+To remove the installed script:
 
 ```bash
-# Uninstall globally installed scripts
+# Uninstall globally installed script
 ./scripts/uninstall.sh
 source ~/.zshrc  # or ~/.bashrc, ~/.profile
 ```
 
 **What `./scripts/uninstall.sh` does:**
-- Removes `~/bin/project-init` and `~/bin/project-init-full`
+- Removes `~/bin/project-init`
 - Removes `~/bin/templates` directory
 - Removes empty `~/bin` directory if no other files exist
 - Removes the PATH modification from your shell config
@@ -122,7 +126,7 @@ vim templates/gitignore.python   # Ignored files
 ### Custom Template Sets
 ```bash
 # Create project-type templates
-mkdir ~/.config/templates/web
+mkdir -p ~/.config/templates/web
 cp templates/* ~/.config/templates/web/
 echo "node_modules/" >> ~/.config/templates/web/gitignore.generic
 
@@ -167,8 +171,7 @@ pytest tests/ --cov=scripts --cov-report=term-missing
 
 ### Test Structure
 
-- `tests/test_full_init_project.py` - Tests for ProjectInitializer class
-- `tests/test_quick_init_project.py` - Tests for quick_init_project.py functions
+- `tests/test_full_init_project.py` - Tests for ProjectInitializer class and all core functionality
 
 All tests use unittest framework with mocking for subprocess calls and file operations.
 
