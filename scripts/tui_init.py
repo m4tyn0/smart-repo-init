@@ -7,6 +7,7 @@ A beautiful terminal interface for setting up new projects with CodeRabbit CLI.
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 import json
@@ -399,7 +400,73 @@ coderabbit review
         with Status("Creating initial commit..."):
             self.run_command(["git", "add", "."])
             self.run_command(["git", "commit", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
-    
+
+    def setup_remote_and_push(self) -> None:
+        """Setup git remote and push to remote repository."""
+        self.console.print("\n[bold cyan]🌐 Setting up remote repository...[/bold cyan]")
+        self.console.print()
+
+        # Check if remote already exists
+        result = self.run_command(["git", "remote", "get-url", "origin"], check=False)
+
+        if result.returncode == 0:
+            remote_url = result.stdout.strip()
+            self.console.print(f"✅ Remote 'origin' already exists: {remote_url}")
+            push_to_existing = Confirm.ask("   Push to this remote?", default=True)
+            if not push_to_existing:
+                self.console.print("   Skipping push to remote.", style="yellow")
+                return
+        else:
+            # No remote exists, ask user if they want to add one
+            self.console.print("📡 No remote repository configured.")
+            add_remote = Confirm.ask("   Add a remote repository?", default=True)
+
+            if not add_remote:
+                self.console.print("   Skipping remote setup. You can add it later with:")
+                self.console.print("   git remote add origin <url>")
+                self.console.print("   git push -u origin main")
+                return
+
+            # Get remote URL from user
+            remote_url = Prompt.ask("   Enter remote repository URL (e.g., git@github.com:user/repo.git)")
+
+            if not remote_url:
+                self.console.print("   No URL provided, skipping remote setup.", style="yellow")
+                return
+
+            # Add the remote
+            self.console.print(f"   Adding remote 'origin': {remote_url}")
+            try:
+                self.run_command(["git", "remote", "add", "origin", remote_url])
+                self.console.print("   ✅ Remote added successfully")
+            except subprocess.CalledProcessError:
+                self.console.print("   ❌ Failed to add remote", style="red")
+                return
+
+        # Push to remote with retry logic
+        self.console.print("\n📤 Pushing to remote...")
+        max_retries = 4
+        retry_delays = [2, 4, 8, 16]  # Exponential backoff
+
+        for attempt in range(max_retries):
+            with Status(f"Pushing to remote (attempt {attempt + 1}/{max_retries})..."):
+                result = self.run_command(["git", "push", "-u", "origin", "main"], check=False)
+
+            if result.returncode == 0:
+                self.console.print("✅ Successfully pushed to remote!")
+                return
+            else:
+                if attempt < max_retries - 1:
+                    delay = retry_delays[attempt]
+                    self.console.print(f"   ⚠️  Push failed, retrying in {delay}s...", style="yellow")
+                    time.sleep(delay)
+                else:
+                    self.console.print(f"   ❌ Failed to push after {max_retries} attempts", style="red")
+                    self.console.print(f"   Error: {result.stderr}", style="red")
+                    self.console.print("\n   You can push manually later with:")
+                    self.console.print("   git push -u origin main")
+                    return
+
     def show_workflow_explanation(self) -> None:
         """Show CodeRabbit workflow explanation."""
         workflow_text = """
@@ -538,9 +605,12 @@ Benefits:
             if options.get("create_initial_commit", True) and git_initialized and checks.get("git_configured"):
                 self.create_initial_commit()
                 self.console.print("✅ Initial commit created")
+
+                # Setup remote and push
+                self.setup_remote_and_push()
             elif options.get("create_initial_commit", True) and not checks.get("git_configured"):
                 self.console.print("⚠️  Skipping initial commit (Git not configured)", style="yellow")
-            
+
             # Show completion message
             self.console.print()
             completion_panel = Panel(

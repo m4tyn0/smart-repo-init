@@ -7,6 +7,7 @@ Initializes a git repository with best practices and CodeRabbit CLI setup.
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -225,8 +226,71 @@ Configuration:
         """Check if git user name and email are configured."""
         user_name = self.run_command(["git", "config", "user.name"], check=False)
         user_email = self.run_command(["git", "config", "user.email"], check=False)
-        
+
         return (user_name.returncode == 0, user_email.returncode == 0)
+
+    def setup_remote_and_push(self) -> None:
+        """Setup git remote and push to remote repository."""
+        print("\n🌐 Setting up remote repository...")
+
+        # Check if remote already exists
+        result = self.run_command(["git", "remote", "get-url", "origin"], check=False)
+
+        if result.returncode == 0:
+            remote_url = result.stdout.strip()
+            print(f"✅ Remote 'origin' already exists: {remote_url}")
+            push_to_existing = input("   Push to this remote? (y/n): ").lower()
+            if push_to_existing != 'y':
+                print("   Skipping push to remote.")
+                return
+        else:
+            # No remote exists, ask user if they want to add one
+            print("📡 No remote repository configured.")
+            add_remote = input("   Add a remote repository? (y/n): ").lower()
+
+            if add_remote != 'y':
+                print("   Skipping remote setup. You can add it later with:")
+                print("   git remote add origin <url>")
+                print("   git push -u origin main")
+                return
+
+            # Get remote URL from user
+            remote_url = input("   Enter remote repository URL (e.g., git@github.com:user/repo.git): ").strip()
+
+            if not remote_url:
+                print("   No URL provided, skipping remote setup.")
+                return
+
+            # Add the remote
+            print(f"   Adding remote 'origin': {remote_url}")
+            try:
+                self.run_command(["git", "remote", "add", "origin", remote_url])
+                print("   ✅ Remote added successfully")
+            except subprocess.CalledProcessError:
+                print("   ❌ Failed to add remote")
+                return
+
+        # Push to remote with retry logic
+        print("\n📤 Pushing to remote...")
+        max_retries = 4
+        retry_delays = [2, 4, 8, 16]  # Exponential backoff
+
+        for attempt in range(max_retries):
+            try:
+                self.run_command(["git", "push", "-u", "origin", "main"])
+                print("✅ Successfully pushed to remote!")
+                return
+            except subprocess.CalledProcessError as e:
+                if attempt < max_retries - 1:
+                    delay = retry_delays[attempt]
+                    print(f"   ⚠️  Push failed (attempt {attempt + 1}/{max_retries}), retrying in {delay}s...")
+                    time.sleep(delay)
+                else:
+                    print(f"   ❌ Failed to push after {max_retries} attempts")
+                    print(f"   Error: {e.stderr}")
+                    print("\n   You can push manually later with:")
+                    print("   git push -u origin main")
+                    return
     
     def run(self, language: str = "python", create_readme: bool = True, explain_workflow: bool = True) -> None:
         """Run the full initialization process."""
@@ -273,7 +337,10 @@ Configuration:
                 self.run_command(["git", "add", "."])
                 self.run_command(["git", "commit", "--no-verify", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
                 print("✅ Initial commit created (pre-commit hook skipped for setup)")
-        
+
+                # Setup remote and push
+                self.setup_remote_and_push()
+
         print("\n🎉 Project initialization complete!")
         
         # Print workflow explanation
