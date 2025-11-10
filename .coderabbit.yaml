@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 # CodeRabbit Configuration
 # Documentation: https://docs.coderabbit.ai/guides/review-instructions
 
@@ -10,7 +11,9 @@ early_access: true
 # Review configuration
 reviews:
   # Automatically review pull requests
-  auto_review: true
+  auto_review:
+    enabled: true
+    drafts: false
   
   # Request changes workflow
   request_changes_workflow: true
