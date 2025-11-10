@@ -103,6 +103,33 @@ echo "node_modules/" >> ~/.config/templates/web/gitignore.generic
 python ./scripts/init_project_v2.py --templates-dir ~/.config/templates/web
 ```
 
+## Testing
+
+The project includes comprehensive unit tests for all core functionality.
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install -r requirements-test.txt
+
+# Run all tests
+./run_tests.sh
+
+# Or run with pytest directly
+pytest tests/ -v
+
+# Run with coverage report
+pytest tests/ --cov=scripts --cov-report=term-missing
+```
+
+### Test Structure
+
+- `tests/test_init_project_v2.py` - Tests for ProjectInitializer class
+- `tests/test_quick_init_v2.py` - Tests for quick_init_v2.py functions
+
+All tests use unittest framework with mocking for subprocess calls and file operations.
+
 ## Troubleshooting
 
 **CodeRabbit not found:**
