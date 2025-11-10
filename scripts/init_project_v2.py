@@ -269,10 +269,10 @@ Configuration:
                 print("  git config --global user.email 'you@example.com'")
             else:
                 print("\n📦 Creating initial commit...")
-                print("   (CodeRabbit will review all files in the initial commit)")
+                print("   (Skipping pre-commit hook for initial setup)")
                 self.run_command(["git", "add", "."])
-                self.run_command(["git", "commit", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
-                print("✅ Initial commit created")
+                self.run_command(["git", "commit", "--no-verify", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
+                print("✅ Initial commit created (pre-commit hook skipped for setup)")
         
         print("\n🎉 Project initialization complete!")
         
