@@ -1,0 +1,29 @@
+# Claude AI Instructions
+# Instructions for Claude AI when working in this repository
+
+## Project Context
+This is a {PROJECT_NAME} project. Please familiarize yourself with the codebase structure before making changes.
+
+## Coding Standards
+- Maintain consistency with existing code style
+- Write self-documenting code with clear names
+- Add docstrings/comments for complex logic
+- Follow language-specific best practices
+
+## Development Workflow
+- Read existing code before suggesting changes
+- Explain your reasoning for significant changes
+- Consider backwards compatibility
+- Test your changes thoroughly
+
+## Communication Style
+- Be concise but thorough
+- Explain trade-offs when multiple approaches exist
+- Ask clarifying questions when requirements are unclear
+- Point out potential issues or improvements
+
+## Quality Standards
+- Prioritize code readability
+- Write maintainable and testable code
+- Consider performance implications
+- Follow security best practices

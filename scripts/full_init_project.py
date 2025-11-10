@@ -164,16 +164,47 @@ class ProjectInitializer:
     def create_readme(self, project_name: Optional[str] = None) -> None:
         """Create README.md from template."""
         print("📄 Creating README.md...")
-        
+
         if project_name is None:
             project_name = self.project_path.name
-        
+
         self.copy_template(
             "README.md",
             "README.md",
             replace_vars={"PROJECT_NAME": project_name}
         )
-    
+
+    def setup_llm_provider_rules(self, project_name: Optional[str] = None) -> None:
+        """Setup LLM provider configuration files."""
+        print("🤖 Setting up LLM provider rules...")
+
+        if project_name is None:
+            project_name = self.project_path.name
+
+        # Create .cursorrules for Cursor AI
+        self.copy_template("cursorrules", ".cursorrules")
+
+        # Create .claude for Claude AI
+        self.copy_template(
+            "claude",
+            ".claude",
+            replace_vars={"PROJECT_NAME": project_name}
+        )
+
+        # Create .github/copilot-instructions.md for GitHub Copilot
+        github_dir = self.project_path / ".github"
+        github_dir.mkdir(exist_ok=True)
+        self.copy_template(
+            "copilot-instructions.md",
+            ".github/copilot-instructions.md",
+            replace_vars={"PROJECT_NAME": project_name}
+        )
+
+        print("✅ LLM provider rules created:")
+        print("   • .cursorrules (Cursor AI)")
+        print("   • .claude (Claude AI)")
+        print("   • .github/copilot-instructions.md (GitHub Copilot)")
+
     def print_workflow_explanation(self) -> None:
         """Print explanation of the CodeRabbit workflow."""
         print("\n" + "="*60)
@@ -292,32 +323,48 @@ Configuration:
                     print("   git push -u origin main")
                     return
     
-    def run(self, language: str = "python", create_readme: bool = True, explain_workflow: bool = True) -> None:
+    def run(self, language: str = "python", create_readme: bool = True, explain_workflow: bool = True, setup_llm_rules: bool = None) -> None:
         """Run the full initialization process."""
         print(f"🚀 Initializing project in: {self.project_path}")
         print(f"📁 Templates directory: {self.templates_dir}\n")
-        
+
         # Check if folder is empty
         if not self.check_empty_folder():
             proceed = input("⚠️  Folder is not empty. Continue anyway? (y/n): ").lower()
             if proceed != 'y':
                 print("Aborting...")
                 sys.exit(0)
-        
+
+        # Ask about LLM provider rules if not specified
+        if setup_llm_rules is None:
+            print("\n🤖 LLM Provider Configuration")
+            print("   Would you like to include configuration files for AI coding assistants?")
+            print("   This will create:")
+            print("   • .cursorrules (Cursor AI)")
+            print("   • .claude (Claude AI)")
+            print("   • .github/copilot-instructions.md (GitHub Copilot)")
+            setup_llm_input = input("   Include LLM provider rules? (y/n): ").lower()
+            setup_llm_rules = setup_llm_input == 'y'
+
         # Initialize git
         git_initialized = self.init_git()
-        
+
         # Create git files
         self.create_gitignore(language)
         self.create_git_attributes()
-        
+
         # Setup CodeRabbit
         self.setup_coderabbit_cli()
-        
+
         # Setup pre-commit hook
         if git_initialized:
             self.setup_precommit_hook()
-        
+
+        # Setup LLM provider rules
+        if setup_llm_rules:
+            project_name = self.project_path.name
+            self.setup_llm_provider_rules(project_name)
+
         # Create README
         if create_readme:
             self.create_readme()
@@ -371,16 +418,22 @@ def main():
 Examples:
   # Initialize in current directory with Python defaults
   %(prog)s
-  
+
   # Initialize in specific directory
   %(prog)s --path ~/projects/my-new-project
-  
+
   # Use generic .gitignore
   %(prog)s --language generic
-  
+
   # Skip README and workflow explanation
   %(prog)s --no-readme --no-workflow
-  
+
+  # Include LLM provider rules without prompting
+  %(prog)s --llm-rules
+
+  # Skip LLM provider rules without prompting
+  %(prog)s --no-llm-rules
+
   # Use custom templates directory
   %(prog)s --templates-dir ~/.config/project-templates
         """
@@ -413,14 +466,32 @@ Examples:
         action="store_true",
         help="Skip workflow explanation"
     )
-    
+    parser.add_argument(
+        "--llm-rules",
+        action="store_true",
+        help="Include LLM provider configuration files (.cursorrules, .claude, etc.)"
+    )
+    parser.add_argument(
+        "--no-llm-rules",
+        action="store_true",
+        help="Skip LLM provider configuration files"
+    )
+
     args = parser.parse_args()
-    
+
+    # Determine setup_llm_rules value
+    setup_llm_rules = None
+    if args.llm_rules:
+        setup_llm_rules = True
+    elif args.no_llm_rules:
+        setup_llm_rules = False
+
     initializer = ProjectInitializer(args.path, args.templates_dir)
     initializer.run(
         language=args.language,
         create_readme=not args.no_readme,
-        explain_workflow=not args.no_workflow
+        explain_workflow=not args.no_workflow,
+        setup_llm_rules=setup_llm_rules
     )
 
 

@@ -377,6 +377,27 @@ class TestProjectInitializer(unittest.TestCase):
         print_calls = [str(call) for call in mock_print.call_args_list]
         self.assertTrue(any('workflow' in str(c).lower() or 'coderabbit' in str(c).lower() for c in print_calls))
 
+    @patch('builtins.print')
+    @patch.object(ProjectInitializer, 'copy_template')
+    @patch.object(Path, 'mkdir')
+    @patch.object(Path, 'exists', return_value=True)
+    def test_setup_llm_provider_rules(self, mock_exists, mock_mkdir, mock_copy, mock_print):
+        """Test setup_llm_provider_rules."""
+        initializer = ProjectInitializer(self.test_path, self.templates_path)
+        initializer.setup_llm_provider_rules('TestProject')
+
+        # Should create .github directory
+        self.assertTrue(mock_mkdir.called)
+
+        # Should copy three templates
+        self.assertEqual(mock_copy.call_count, 3)
+
+        # Check that all three templates are copied
+        calls = [call[0] for call in mock_copy.call_args_list]
+        self.assertTrue(any('cursorrules' in str(c) for c in calls))
+        self.assertTrue(any('claude' in str(c) for c in calls))
+        self.assertTrue(any('copilot-instructions.md' in str(c) for c in calls))
+
 
 if __name__ == '__main__':
     unittest.main()

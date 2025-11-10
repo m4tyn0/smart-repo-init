@@ -1,0 +1,30 @@
+# Cursor AI Rules
+# This file provides instructions to Cursor AI when working in this repository
+
+## Code Style
+- Follow the existing code style and patterns in the repository
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Write clean, maintainable code
+
+## Testing
+- Write tests for new features
+- Ensure all tests pass before committing
+- Maintain or improve code coverage
+
+## Documentation
+- Update documentation when adding new features
+- Keep README.md up to date
+- Document API changes
+
+## Best Practices
+- Follow SOLID principles
+- Keep functions small and focused
+- Avoid code duplication
+- Handle errors appropriately
+- Consider security implications
+
+## Git Workflow
+- Write clear, descriptive commit messages
+- Keep commits atomic and focused
+- Review changes before committing
