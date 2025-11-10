@@ -23,12 +23,6 @@ if [ -f "$HOME/bin/project-init" ]; then
     ((removed_count++))
 fi
 
-if [ -f "$HOME/bin/project-init-full" ]; then
-    rm "$HOME/bin/project-init-full"
-    echo "✅ Removed ~/bin/project-init-full"
-    ((removed_count++))
-fi
-
 # Remove templates directory
 if [ -d "$HOME/bin/templates" ]; then
     rm -rf "$HOME/bin/templates"
