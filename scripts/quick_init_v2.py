@@ -145,8 +145,8 @@ coderabbit review || exit 1
     
     if git_user.returncode == 0 and git_email.returncode == 0:
         run(["git", "add", "."])
-        run(["git", "commit", "-m", "Initial commit"])
-        print("✅ Initial commit done")
+        run(["git", "commit", "--no-verify", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
+        print("✅ Initial commit done (pre-commit hook skipped for setup)")
     else:
         print("⚠️  Git user not configured - skipping initial commit")
         print("   Set with: git config --global user.name 'Your Name'")
