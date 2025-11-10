@@ -7,6 +7,7 @@ Usage: python quick_init.py
 from pathlib import Path
 import subprocess
 import sys
+import time
 
 
 def run(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
@@ -42,6 +43,69 @@ def load_template(template_name: str, templates_dir: Path) -> str:
     if template_path.exists():
         return template_path.read_text()
     return None
+
+
+def setup_remote_and_push() -> None:
+    """Setup git remote and push to remote repository."""
+    print("\n🌐 Setting up remote repository...")
+
+    # Check if remote already exists
+    result = run(["git", "remote", "get-url", "origin"], check=False)
+
+    if result.returncode == 0:
+        remote_url = result.stdout.strip()
+        print(f"✅ Remote 'origin' already exists: {remote_url}")
+        push_to_existing = input("   Push to this remote? (y/n): ").lower()
+        if push_to_existing != 'y':
+            print("   Skipping push to remote.")
+            return
+    else:
+        # No remote exists, ask user if they want to add one
+        print("📡 No remote repository configured.")
+        add_remote = input("   Add a remote repository? (y/n): ").lower()
+
+        if add_remote != 'y':
+            print("   Skipping remote setup. You can add it later with:")
+            print("   git remote add origin <url>")
+            print("   git push -u origin main")
+            return
+
+        # Get remote URL from user
+        remote_url = input("   Enter remote repository URL (e.g., git@github.com:user/repo.git): ").strip()
+
+        if not remote_url:
+            print("   No URL provided, skipping remote setup.")
+            return
+
+        # Add the remote
+        print(f"   Adding remote 'origin': {remote_url}")
+        result = run(["git", "remote", "add", "origin", remote_url], check=False)
+        if result.returncode != 0:
+            print("   ❌ Failed to add remote")
+            return
+        print("   ✅ Remote added successfully")
+
+    # Push to remote with retry logic
+    print("\n📤 Pushing to remote...")
+    max_retries = 4
+    retry_delays = [2, 4, 8, 16]  # Exponential backoff
+
+    for attempt in range(max_retries):
+        result = run(["git", "push", "-u", "origin", "main"], check=False)
+        if result.returncode == 0:
+            print("✅ Successfully pushed to remote!")
+            return
+        else:
+            if attempt < max_retries - 1:
+                delay = retry_delays[attempt]
+                print(f"   ⚠️  Push failed (attempt {attempt + 1}/{max_retries}), retrying in {delay}s...")
+                time.sleep(delay)
+            else:
+                print(f"   ❌ Failed to push after {max_retries} attempts")
+                print(f"   Error: {result.stderr}")
+                print("\n   You can push manually later with:")
+                print("   git push -u origin main")
+                return
 
 
 def main():
@@ -147,11 +211,14 @@ coderabbit review || exit 1
         run(["git", "add", "."])
         run(["git", "commit", "--no-verify", "-m", "Initial commit: Project setup with CodeRabbit CLI"])
         print("✅ Initial commit done (pre-commit hook skipped for setup)")
+
+        # Setup remote and push
+        setup_remote_and_push()
     else:
         print("⚠️  Git user not configured - skipping initial commit")
         print("   Set with: git config --global user.name 'Your Name'")
         print("             git config --global user.email 'you@example.com'")
-    
+
     print("\n🎉 Done!\n")
     
     # Print installation instructions if needed
