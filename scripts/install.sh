@@ -31,21 +31,21 @@ mkdir -p "$HOME/bin"
 echo "✅ Created ~/bin directory"
 
 # Copy scripts from scripts/ directory
-if [ -f "$SCRIPT_DIR/quick_init_v2.py" ]; then
-    cp "$SCRIPT_DIR/quick_init_v2.py" "$HOME/bin/project-init"
+if [ -f "$SCRIPT_DIR/quick_init_project.py" ]; then
+    cp "$SCRIPT_DIR/quick_init_project.py" "$HOME/bin/project-init"
     chmod +x "$HOME/bin/project-init"
-    echo "✅ Copied quick_init_v2.py to ~/bin/project-init"
+    echo "✅ Copied quick_init_project.py to ~/bin/project-init"
 else
-    echo "❌ Error: Could not find quick_init_v2.py in $SCRIPT_DIR"
+    echo "❌ Error: Could not find quick_init_project.py in $SCRIPT_DIR"
     exit 1
 fi
 
-if [ -f "$SCRIPT_DIR/init_project_v2.py" ]; then
-    cp "$SCRIPT_DIR/init_project_v2.py" "$HOME/bin/project-init-full"
+if [ -f "$SCRIPT_DIR/full_init_project.py" ]; then
+    cp "$SCRIPT_DIR/full_init_project.py" "$HOME/bin/project-init-full"
     chmod +x "$HOME/bin/project-init-full"
-    echo "✅ Copied init_project_v2.py to ~/bin/project-init-full"
+    echo "✅ Copied full_init_project.py to ~/bin/project-init-full"
 else
-    echo "❌ Error: Could not find init_project_v2.py in $SCRIPT_DIR"
+    echo "❌ Error: Could not find full_init_project.py in $SCRIPT_DIR"
     exit 1
 fi
 

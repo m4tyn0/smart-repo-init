@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unit tests for init_project_v2.py
+Unit tests for full_init_project.py
 """
 
 import subprocess
@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, Mock, call, mock_open, patch
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from init_project_v2 import ProjectInitializer
+from full_init_project import ProjectInitializer
 
 
 class TestProjectInitializer(unittest.TestCase):

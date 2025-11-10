@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unit tests for quick_init_v2.py
+Unit tests for quick_init_project.py
 """
 
 import subprocess
@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, Mock, call, patch
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from quick_init_v2 import check_coderabbit, load_template, print_install_instructions, run
+from quick_init_project import check_coderabbit, load_template, print_install_instructions, run
 
 
 class TestQuickInitFunctions(unittest.TestCase):

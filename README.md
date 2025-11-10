@@ -11,7 +11,7 @@ coderabbit auth login
 
 # 2. Initialize a project
 mkdir myproject && cd myproject
-python ./scripts/quick_init_v2.py
+python ./scripts/quick_init_project.py
 ```
 
 ## What It Does
@@ -23,17 +23,17 @@ python ./scripts/quick_init_v2.py
 
 ## Scripts
 
-### `quick_init_v2.py` (Recommended)
+### `quick_init_project.py` (Recommended)
 Fast setup with sensible defaults:
 ```bash
-python ./scripts/quick_init_v2.py
+python ./scripts/quick_init_project.py
 ```
 
-### `init_project_v2.py` (Advanced)
+### `full_init_project.py` (Advanced)
 Full-featured with options:
 ```bash
-python ./scripts/init_project_v2.py --path ~/projects/my-app --language python
-python ./scripts/init_project_v2.py --no-readme --templates-dir ~/.config/templates
+python ./scripts/full_init_project.py --path ~/projects/my-app --language python
+python ./scripts/full_init_project.py --no-readme --templates-dir ~/.config/templates
 ```
 
 **Available options:**
@@ -84,6 +84,22 @@ mkdir myproject && cd myproject && project-init
 - Adds `~/bin` to your PATH (requires shell restart)
 - Enables `project-init` command from anywhere
 
+### Uninstall
+
+To remove the installed scripts:
+
+```bash
+# Uninstall globally installed scripts
+./scripts/uninstall.sh
+source ~/.zshrc  # or ~/.bashrc, ~/.profile
+```
+
+**What `./scripts/uninstall.sh` does:**
+- Removes `~/bin/project-init` and `~/bin/project-init-full`
+- Removes `~/bin/templates` directory
+- Removes empty `~/bin` directory if no other files exist
+- Removes the PATH modification from your shell config
+
 ## Customization
 
 ### Edit Templates
@@ -100,7 +116,7 @@ cp templates/* ~/.config/templates/web/
 echo "node_modules/" >> ~/.config/templates/web/gitignore.generic
 
 # Use them
-python ./scripts/init_project_v2.py --templates-dir ~/.config/templates/web
+python ./scripts/full_init_project.py --templates-dir ~/.config/templates/web
 ```
 
 ## Testing
@@ -125,8 +141,8 @@ pytest tests/ --cov=scripts --cov-report=term-missing
 
 ### Test Structure
 
-- `tests/test_init_project_v2.py` - Tests for ProjectInitializer class
-- `tests/test_quick_init_v2.py` - Tests for quick_init_v2.py functions
+- `tests/test_full_init_project.py` - Tests for ProjectInitializer class
+- `tests/test_quick_init_project.py` - Tests for quick_init_project.py functions
 
 All tests use unittest framework with mocking for subprocess calls and file operations.
 
