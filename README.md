@@ -7,11 +7,11 @@ Quick setup for new repositories with git best practices and CodeRabbit code rev
 This project uses [uv](https://docs.astral.sh/uv/) for fast Python package management:
 
 ```bash
-# Install uv (recommended for best performance)
+# Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-> **Why uv?** uv is 10-100x faster than pip for installing packages and resolving dependencies, making development and testing significantly more efficient.
+> **Why uv?** uv is 10-100x faster than pip for installing packages and resolving dependencies.
 
 ## Quick Start
 
@@ -136,21 +136,21 @@ The project includes comprehensive unit tests for all core functionality.
 
 ### Running Tests
 
-**With uv (recommended - much faster):**
+**With uv:**
 
 ```bash
-# Install dependencies and run tests (uv handles everything)
+# Install dependencies and run tests
 ./run_tests.sh
 
 # Or manually with uv
-uv sync --extra test      # Install test dependencies (fast!)
-uv run pytest tests/ -v   # Run tests
+uv sync --extra test
+uv run pytest tests/ -v
 
 # Run with coverage report
 uv run pytest tests/ --cov=scripts --cov-report=term-missing
 ```
 
-**Without uv (traditional pip method):**
+**Without uv:**
 
 ```bash
 # Install test dependencies
@@ -163,7 +163,7 @@ pytest tests/ -v
 pytest tests/ --cov=scripts --cov-report=term-missing
 ```
 
-> **Note:** The `./run_tests.sh` script automatically detects if `uv` is installed and uses it for faster execution. It falls back to pip if uv is not available.
+> **Note:** The `./run_tests.sh` script automatically detects if `uv` is installed. It falls back to pip if uv is not available.
 
 ### Test Structure
 
@@ -176,10 +176,10 @@ All tests use unittest framework with mocking for subprocess calls and file oper
 
 **uv not found:**
 ```bash
-# Install uv for faster package management
+# Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Restart your shell or run:
+# Restart your shell or run
 source $HOME/.cargo/env
 ```
 
