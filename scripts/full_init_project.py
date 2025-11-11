@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
 """
-Project Initialization Script
-Initializes a git repository with best practices and CodeRabbit CLI setup.
+Smart Repo Init - Repository Initialization Tool
+
+A professional tool for initializing git repositories with best practices,
+including CodeRabbit CLI integration, pre-commit hooks, and standardized
+configuration files.
+
+Author: Smart Repo Init Contributors
+License: MIT
+Repository: https://github.com/m4tyn0/smart-repo-init
 """
+
+__version__ = "1.0.0"
+__author__ = "Smart Repo Init Contributors"
+__license__ = "MIT"
 
 import shutil
 import subprocess
@@ -361,57 +372,75 @@ Configuration:
 
 
 def main():
-    """Main entry point."""
+    """Main entry point for the CLI."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
-        description="Initialize a new project with git and CodeRabbit CLI",
+        prog="smart-repo-init",
+        description="Professional repository initialization tool with git best practices and CodeRabbit integration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
-  # Initialize in current directory with Python defaults
-  %(prog)s
-  
-  # Initialize in specific directory
-  %(prog)s --path ~/projects/my-new-project
-  
-  # Use generic .gitignore
-  %(prog)s --language generic
-  
-  # Skip README and workflow explanation
-  %(prog)s --no-readme --no-workflow
-  
-  # Use custom templates directory
-  %(prog)s --templates-dir ~/.config/project-templates
+examples:
+  Initialize current directory with Python defaults:
+    %(prog)s
+
+  Initialize a specific directory:
+    %(prog)s --path ~/projects/my-new-project
+
+  Use a different language template:
+    %(prog)s --language javascript
+
+  Skip optional features:
+    %(prog)s --no-readme --no-workflow
+
+  Use custom templates:
+    %(prog)s --templates-dir ~/.config/project-templates
+
+For more information, visit: https://github.com/m4tyn0/smart-repo-init
         """
     )
+
+    parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+        help="Show program version and exit"
+    )
+
     parser.add_argument(
         "--path",
         type=Path,
         default=Path.cwd(),
-        help="Project path (default: current directory)"
+        metavar="DIR",
+        help="Target directory for initialization (default: current directory)"
     )
+
     parser.add_argument(
         "--language",
         type=str,
         default="python",
+        metavar="LANG",
         help="Programming language for .gitignore template (default: python)"
     )
+
     parser.add_argument(
         "--templates-dir",
         type=Path,
         default=None,
-        help="Custom templates directory (default: ./templates)"
+        metavar="DIR",
+        help="Custom templates directory (default: auto-detect)"
     )
+
     parser.add_argument(
         "--no-readme",
         action="store_true",
-        help="Skip README.md creation"
+        help="Skip README.md file creation"
     )
+
     parser.add_argument(
         "--no-workflow",
         action="store_true",
-        help="Skip workflow explanation"
+        help="Skip displaying workflow explanation"
     )
     
     args = parser.parse_args()
